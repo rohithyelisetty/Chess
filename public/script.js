@@ -47,6 +47,25 @@ socket.on('roomUsers', function(roomUsers) {
     }
 });
 
+socket.on("roomId", function(room) {
+    roomId = room;
+    document.getElementById("roomCode").innerHTML = "Room Code: " + roomId;
+});
+
+socket.on("tooManyUsers", function() {
+    alert("Too many Users In the Room. Please find another room");
+});
+
+socket.on("randomJoin", function(room) {
+    roomId = room;
+    document.getElementById("roomCode").innerHTML = "Room Code: " + roomId;
+    socket.emit("join", roomId);
+});
+
+socket.on("noEmpty", function() {
+    alert("No empty rooms currently");
+});
+
 socket.on('color', function(color) {
     boardColor = color;
 });
@@ -72,12 +91,16 @@ function generateId(length) {
 function addRoomId() {
     roomId = generateId(6);
     document.getElementById("roomCode").innerHTML += roomId;
-    socket.emit("join", roomId)
+    socket.emit("join", roomId);
 }
 
 function joinRoom() {
     roomId = document.getElementById("joinRoom").value;
     socket.emit("join", roomId);
+}
+
+function randomRoom() {
+    socket.emit("random");
 }
 
 function movePieces(id) {
@@ -651,14 +674,14 @@ function kingPosition(color) {
 }
 
 function checkMate() {
-    var mateHTML = document.getElementById("checkMate");
+    var mate = document.getElementById("checkMate");
 
     if (button2.innerHTML === whiteKing && button2 !== button1) {
-        mateHTML.innerHTML = "Checkmate! Black Wins!";
+        mate.innerHTML = "Checkmate! Black Wins!";
         seconds = -2;
     }
     if (button2.innerHTML === blackKing && button2 !== button1) {
-        mateHTML.innerHTML = "Checkmate! White Wins!";
+        mate.innerHTML = "Checkmate! White Wins!";
         seconds = -2;
     }
 }

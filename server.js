@@ -5,8 +5,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.use(express.static(__dirname + '/public'));
 var rooms = {};
-var room;
-var color;
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,17 +21,17 @@ io.on('connection', function(socket) {
     });
 
     socket.on("join", function(roomId) {
+        var color;
         socket.join(roomId);
         socket.room = roomId;
-        room = roomId;
+        socket.emit("roomId", roomId)
         if (rooms[roomId] === undefined) {
             rooms[roomId] = 1;
-            socket.emit("color", color);
         } else {
             rooms[roomId]++;
         }
         if (rooms[roomId] === 3) {
-            socket.emit('tooManyUsers', rooms[roomId]);
+            socket.emit('tooManyUsers');
         } else {
             io.in(roomId).emit("roomUsers", rooms[roomId]);
             if (rooms[roomId] === 1) {
@@ -43,11 +41,30 @@ io.on('connection', function(socket) {
             }
             socket.emit("color", color);
         }
-    })
 
-    socket.on('disconnect', function() {
-        console.log('A user disconnected');
+        socket.on('disconnecting', function() {
+            rooms[roomId]--;
+            io.to(roomId).emit('roomUsers', rooms[roomId]);
+            if (rooms[roomId] === 0) {
+                delete rooms[roomId];
+            }
+            console.log('A user disconnected');
+        });
     });
+
+    socket.on("random", function() {
+        console.log("here")
+        for (var key in rooms) {
+            if (rooms.hasOwnProperty(key)) {
+                if (rooms[key] === 1) {
+                    socket.emit("randomJoin", key);
+                    return;
+                }
+            }
+        }
+        socket.emit("noEmpty");
+    });
+
 });
 
 http.listen(PORT, function() {
