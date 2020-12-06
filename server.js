@@ -8,6 +8,8 @@ var rooms = {};
 var room;
 var color;
 
+const PORT = process.ENV.PORT || 3000;
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -48,6 +50,6 @@ io.on('connection', function(socket) {
     });
 });
 
-http.listen(3000, function() {
+http.listen(PORT, function() {
     console.log('listening on localhost:3000');
 });
