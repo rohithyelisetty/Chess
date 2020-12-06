@@ -1,0 +1,332 @@
+<script src=" /socket.io/socket.io.js"></script>
+<script src="script.js"></script>
+<link rel="stylesheet" href="style.css">
+
+<script>
+    setInterval("enableJoin()", 100);
+</script>
+
+<div class="room" id="room">
+    <label for="createRoom">Create Room:</label>
+    <br>
+    <button class="rooms btn btn-primary" id="createRoom" onclick="addRoomId();">Create Room</button>
+    <br><br>
+    <label for="joinRoom">Join Room:</label>
+    <br>
+    <div class="form-group">
+        <input type="text" class="form-control" id="joinRoom">
+    </div>
+    <button class="rooms btn btn-primary" id="join" disabled onclick="joinRoom();">Join Room</button>
+</div>
+
+<div class="waitingForUser" id="userWaiting">
+    <div id="roomCode">Room Code: </div>
+    Waiting For 2nd User
+    <br>
+    <div class="loader"><span class="loader-inner"></span></div>
+</div>
+
+<div class="container" id="container">
+    <table id="mainTable">
+        <tr>
+            <td>
+                <table id="table">
+                    <tr>
+                        <td>
+                            <p class="Numbers">8</p>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="a8" onclick="movePieces(this.id)">♜</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="b8" onclick="movePieces(this.id)">♞</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="c8" onclick="movePieces(this.id)">♝</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="d8" onclick="movePieces(this.id)">♛</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="e8" onclick="movePieces(this.id)">♚</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="f8" onclick="movePieces(this.id)">♝</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="g8" onclick="movePieces(this.id)">♞</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="h8" onclick="movePieces(this.id)">♜</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="Numbers">7</p>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="a7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="b7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="c7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="d7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="e7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="f7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="g7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="h7" onclick="movePieces(this.id)">♟︎</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="Numbers">6</p>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="a6" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="b6" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="c6" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="d6" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="e6" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="f6" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="g6" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="h6" onclick="movePieces(this.id)"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="Numbers">5</p>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="a5" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="b5" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="c5" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="d5" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="e5" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="f5" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="g5" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="h5" onclick="movePieces(this.id)"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="Numbers">4</p>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="a4" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="b4" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="c4" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="d4" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="e4" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="f4" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="g4" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="h4" onclick="movePieces(this.id)"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="Numbers">3</p>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="a3" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="b3" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="c3" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="d3" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="e3" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="f3" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="g3" onclick="movePieces(this.id)"></button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="h3" onclick="movePieces(this.id)"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="Numbers">2</p>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="a2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="b2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="c2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="d2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="e2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="f2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="g2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="h2" onclick="movePieces(this.id)">♙</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="Numbers">1</p>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="a1" onclick="movePieces(this.id)">♖</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="b1" onclick="movePieces(this.id)">♘</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="c1" onclick="movePieces(this.id)">♗</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="d1" onclick="movePieces(this.id)">♕</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="e1" onclick="movePieces(this.id)">♔</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="f1" onclick="movePieces(this.id)">♗</button>
+                        </td>
+                        <td>
+                            <button class="ct ctEven" id="g1" onclick="movePieces(this.id)">♘</button>
+                        </td>
+                        <td>
+                            <button class="ct ctOdd" id="h1" onclick="movePieces(this.id)">♖</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <p class="Letters">a</p>
+                        </td>
+                        <td>
+                            <p class="Letters">b</p>
+                        </td>
+                        <td>
+                            <p class="Letters">c</p>
+                        </td>
+                        <td>
+                            <p class="Letters">d</p>
+                        </td>
+                        <td>
+                            <p class="Letters">e</p>
+                        </td>
+                        <td>
+                            <p class="Letters">f</p>
+                        </td>
+                        <td>
+                            <p class="Letters">g</p>
+                        </td>
+                        <td>
+                            <p class="Letters">h</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td id="TimerKill">
+                <table id="TimerKillTable">
+                    <col width="100px" />
+                    <tr id="WhitePieces">
+                        <td>
+                            <div id="WhiteKill"></div>
+                        </td>
+                    </tr>
+                    <tr id="timer">
+                        <td>
+                            <div class="timerContainer">
+                                <p id="countdown">30</p>
+                                <p id="Turn">White's Turn</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="BlackPieces">
+                        <td>
+                            <div id="BlackKill"></div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td id="MovesHistory">
+                <div class="scroll">
+                    <h3>History of Moves</h3>
+                    <p id="HistoryMoves"></p>
+                </div>
+            </td>
+            <td id="Check">
+                <p id="check"></p>
+            </td>
+            <td id="Checkmate">
+                <p id="checkMate"></p>
+            </td>
+        </tr>
+    </table>
+</div>
