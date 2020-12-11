@@ -4,9 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "devStart": "nodemon server.js"
+        "start": "nodemon server.js"
     },
-    "author": "",
+    "author": "Rohith Yelisetty",
     "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.0.0",

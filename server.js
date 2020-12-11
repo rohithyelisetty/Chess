@@ -20,6 +20,14 @@ io.on('connection', function(socket) {
         socket.to(roomId).emit('move', move);
     });
 
+    socket.on('removeCheck', function(roomId) {
+        socket.to(roomId).emit('removeCheck');
+    });
+
+    socket.on('checkmate', function(roomId, html) {
+        socket.to(roomId).emit('mate', html);
+    });
+
     socket.on("join", function(roomId) {
         var color;
         socket.join(roomId);

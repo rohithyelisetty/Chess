@@ -185,6 +185,20 @@ body {
     font-family: 'Times New Roman', Times, serif;
 }
 
+#Check {
+    border-radius: 5px;
+    width: 100.67px;
+    border: 1px solid white;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#Checkmate {
+    border-radius: 5px;
+    width: 100.67px;
+    border: 1px solid white;
+    font-family: 'Times New Roman', Times, serif;
+}
+
 .Numbers {
     font-weight: bold;
     font-family: 'Times New Roman', Times, serif;
@@ -239,6 +253,14 @@ body {
 }
 
 .check {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 4px;
+    font-size: 30px;
+    border-radius: 5px;
+}
+
+.checkMate {
     width: 45px;
     height: 45px;
     margin-bottom: 4px;
