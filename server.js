@@ -69,24 +69,6 @@ io.on('connection', function(socket) {
         });
     });
 
-    socket.on("aiPlay", function(roomId) {
-        var color = "white";
-        socket.join(roomId);
-        socket.room = roomId;
-        rooms[roomId] = 2;
-        io.in(roomId).emit("roomUsers", rooms[roomId]);
-        socket.emit("color", color);
-
-        socket.on('disconnecting', function() {
-            rooms[roomId]--;
-            io.to(roomId).emit('roomUsers', rooms[roomId]);
-            if (rooms[roomId] === 0) {
-                delete rooms[roomId];
-            }
-            console.log('A user disconnected');
-        });
-    });
-
     socket.on("random", function() {
         console.log("here")
         for (var key in rooms) {
