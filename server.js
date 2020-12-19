@@ -28,6 +28,15 @@ io.on('connection', function(socket) {
         socket.to(roomId).emit('mate', html);
     });
 
+
+    socket.on('movesHistory', function(roomId, html, turnNumber, lineBool) {
+        socket.to(roomId).emit('movesHistory', html, turnNumber, lineBool);
+    });
+
+    socket.on('castle', function(roomId, side, color) {
+        socket.to(roomId).emit('castle', side, color);
+    })
+
     socket.on("join", function(roomId) {
         var color;
         socket.join(roomId);
@@ -49,6 +58,24 @@ io.on('connection', function(socket) {
             }
             socket.emit("color", color);
         }
+
+        socket.on('disconnecting', function() {
+            rooms[roomId]--;
+            io.to(roomId).emit('roomUsers', rooms[roomId]);
+            if (rooms[roomId] === 0) {
+                delete rooms[roomId];
+            }
+            console.log('A user disconnected');
+        });
+    });
+
+    socket.on("aiPlay", function(roomId) {
+        var color = "white";
+        socket.join(roomId);
+        socket.room = roomId;
+        rooms[roomId] = 2;
+        io.in(roomId).emit("roomUsers", rooms[roomId]);
+        socket.emit("color", color);
 
         socket.on('disconnecting', function() {
             rooms[roomId]--;
