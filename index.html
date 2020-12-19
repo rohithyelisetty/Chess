@@ -1,5 +1,4 @@
 <script src=" /socket.io/socket.io.js"></script>
-<script src="script.js"></script>
 <link rel="stylesheet" href="style.css">
 
 <script>
@@ -30,6 +29,7 @@
 </div>
 
 <div class="container" id="container">
+    <p id="Color">Color: </p>
     <table id="mainTable">
         <tr>
             <td>
@@ -39,28 +39,28 @@
                             <p class="Numbers">8</p>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="a8" onclick="movePieces(this.id)">♜</button>
+                            <button class="ct ctOdd" id="a8" onclick="movePieces(this.id)"><img class="piece" src="blackRook.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="b8" onclick="movePieces(this.id)">♞</button>
+                            <button class="ct ctEven" id="b8" onclick="movePieces(this.id)"><img class="piece" src="blackKnight.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="c8" onclick="movePieces(this.id)">♝</button>
+                            <button class="ct ctOdd" id="c8" onclick="movePieces(this.id)"><img class="piece" src="blackBishop.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="d8" onclick="movePieces(this.id)">♛</button>
+                            <button class="ct ctEven" id="d8" onclick="movePieces(this.id)"><img class="piece" src="blackQueen.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="e8" onclick="movePieces(this.id)">♚</button>
+                            <button class="ct ctOdd" id="e8" onclick="movePieces(this.id)"><img class="piece" src="blackKing.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="f8" onclick="movePieces(this.id)">♝</button>
+                            <button class="ct ctEven" id="f8" onclick="movePieces(this.id)"><img class="piece" src="blackBishop.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="g8" onclick="movePieces(this.id)">♞</button>
+                            <button class="ct ctOdd" id="g8" onclick="movePieces(this.id)"><img class="piece" src="blackKnight.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="h8" onclick="movePieces(this.id)">♜</button>
+                            <button class="ct ctEven" id="h8" onclick="movePieces(this.id)"><img class="piece" src="blackRook.png"></button>
                         </td>
                     </tr>
                     <tr>
@@ -68,28 +68,28 @@
                             <p class="Numbers">7</p>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="a7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctEven" id="a7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="b7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctOdd" id="b7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="c7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctEven" id="c7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="d7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctOdd" id="d7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="e7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctEven" id="e7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="f7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctOdd" id="f7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="g7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctEven" id="g7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="h7" onclick="movePieces(this.id)">♟︎</button>
+                            <button class="ct ctOdd" id="h7" onclick="movePieces(this.id)"><img class="piece" src="blackPawn.png"></button>
                         </td>
                     </tr>
                     <tr>
@@ -213,28 +213,28 @@
                             <p class="Numbers">2</p>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="a2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctOdd" id="a2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="b2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctEven" id="b2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="c2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctOdd" id="c2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="d2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctEven" id="d2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="e2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctOdd" id="e2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="f2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctEven" id="f2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="g2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctOdd" id="g2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="h2" onclick="movePieces(this.id)">♙</button>
+                            <button class="ct ctEven" id="h2" onclick="movePieces(this.id)"><img class="piece" src="whitePawn.png"></button>
                         </td>
                     </tr>
                     <tr>
@@ -242,28 +242,28 @@
                             <p class="Numbers">1</p>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="a1" onclick="movePieces(this.id)">♖</button>
+                            <button class="ct ctEven" id="a1" onclick="movePieces(this.id)"><img class="piece" src="whiteRook.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="b1" onclick="movePieces(this.id)">♘</button>
+                            <button class="ct ctOdd" id="b1" onclick="movePieces(this.id)"><img class="piece" src="whiteKnight.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="c1" onclick="movePieces(this.id)">♗</button>
+                            <button class="ct ctEven" id="c1" onclick="movePieces(this.id)"><img class="piece" src="whiteBishop.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="d1" onclick="movePieces(this.id)">♕</button>
+                            <button class="ct ctOdd" id="d1" onclick="movePieces(this.id)"><img class="piece" src="whiteQueen.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="e1" onclick="movePieces(this.id)">♔</button>
+                            <button class="ct ctEven" id="e1" onclick="movePieces(this.id)"><img class="piece" src="whiteKing.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="f1" onclick="movePieces(this.id)">♗</button>
+                            <button class="ct ctOdd" id="f1" onclick="movePieces(this.id)"><img class="piece" src="whiteBishop.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctEven" id="g1" onclick="movePieces(this.id)">♘</button>
+                            <button class="ct ctEven" id="g1" onclick="movePieces(this.id)"><img class="piece" src="whiteKnight.png"></button>
                         </td>
                         <td>
-                            <button class="ct ctOdd" id="h1" onclick="movePieces(this.id)">♖</button>
+                            <button class="ct ctOdd" id="h1" onclick="movePieces(this.id)"><img class="piece" src="whiteRook.png"></button>
                         </td>
                     </tr>
                     <tr>
@@ -329,3 +329,5 @@
         </tr>
     </table>
 </div>
+
+<script src="script.js"></script>

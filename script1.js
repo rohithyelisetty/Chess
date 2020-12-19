@@ -1,8 +1,6 @@
 var moveInterval = 30;
 var seconds = moveInterval;
 var countdown = setInterval(timer, 1000);
-var turnRotation = 1;
-var addLine = false;
 var button1 = null;
 var button2 = null;
 var button2HTML = null;
@@ -17,38 +15,31 @@ var rook2Black = false;
 var kingWhite = false;
 var kingBlack = false;
 var playingComputer = false;
-var depthLevel = 0;
 var checkMoves = [];
 var board = [];
 const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
-const whitePawn = '<img class="piece" src="whitePawn.png">';
-const whiteRook = '<img class="piece" src="whiteRook.png">';
-const whiteKnight = '<img class="piece" src="whiteKnight.png">';
-const whiteBishop = '<img class="piece" src="whiteBishop.png">';
-const whiteQueen = '<img class="piece" src="whiteQueen.png">';
-const whiteKing = '<img class="piece" src="whiteKing.png">';
-const blackPawn = '<img class="piece" src="blackPawn.png">';
-const blackRook = '<img class="piece" src="blackRook.png">';
-const blackKnight = '<img class="piece" src="blackKnight.png">';
-const blackBishop = '<img class="piece" src="blackBishop.png">';
-const blackQueen = '<img class="piece" src="blackQueen.png">';
-const blackKing = '<img class="piece" src="blackKing.png">';
-const blackPieces = new Array(blackPawn, blackRook, blackKnight, blackBishop, blackQueen, blackKing);
-const whitePieces = new Array(whitePawn, whiteRook, whiteKnight, whiteBishop, whiteQueen, whiteKing);
+const blackPieces = /[♜♞♝♛♚♟]/g;
+const whitePieces = /[♖♘♗♕♔♙]/g;
+const whitePawn = "♙";
+const whiteRook = "♖";
+const whiteKnight = "♘";
+const whiteBishop = "♗";
+const whiteQueen = "♕";
+const whiteKing = "♔";
+const blackPawn = "♟︎";
+const blackRook = "♜";
+const blackKnight = "♞";
+const blackBishop = "♝";
+const blackQueen = "♛";
+const blackKing = "♚";
 const white = "white";
 const black = "black";
 
 var socket = io();
-
 socket.on('move', function(move) {
     console.log(move);
     importMove(move);
-});
-
-socket.on('color', function(color) {
-    boardColor = color;
-    document.getElementById("Color").innerHTML = "Color: " + boardColor;
 });
 
 socket.on('removeCheck', function() {
@@ -84,12 +75,10 @@ socket.on("noEmpty", function() {
 
 socket.on("mate", function(html) {
     document.getElementById('Checkmate').innerHTML = html;
-});
+})
 
-socket.on("movesHistory", function(html, turnNumber, lineBool) {
-    document.getElementById('HistoryMoves').innerHTML = html;
-    turnRotation = turnNumber;
-    addLine = lineBool;
+socket.on('color', function(color) {
+    boardColor = color;
 });
 
 function enableJoin() {
@@ -123,6 +112,11 @@ function joinRoom() {
 
 function randomRoom() {
     socket.emit("random");
+}
+
+function computerAI() {
+    roomId = generateId(6);
+    socket.emit("aiPlay", roomId);
 }
 
 function movePieces(id) {
@@ -180,10 +174,10 @@ function movePieces(id) {
         kingMoved();
         pieceKill();
         button2.innerHTML = button1.innerHTML;
-        castleChosen(button1, button2, "right", white);
-        castleChosen(button1, button2, "left", white);
-        castleChosen(button1, button2, "right", black);
-        castleChosen(button1, button2, "left", black);
+        castleChosen("right", white);
+        castleChosen("left", white);
+        castleChosen("right", black);
+        castleChosen("left", black);
         if (button1.innerHTML === whitePawn) {
             pawnToPiece(id, white);
         } else if (button1.innerHTML === blackPawn) {
@@ -202,9 +196,10 @@ function movePieces(id) {
         check();
         checkMate();
         check();
-        movesHistory(button2, true);
+        movesHistory(button1, button2);
         exportMove();
         switchHTML();
+
         button1 = null;
         button2 = null;
     }
@@ -264,9 +259,9 @@ function pawn(id, color, move) {
 }
 
 function pawnKill(killButton, color, move) {
-    if (color === white && blackPieces.includes(document.getElementById(killButton).innerHTML)) {
+    if (color === white && document.getElementById(killButton).innerHTML.match(blackPieces)) {
         possibleMove(killButton, move);
-    } else if (color === black && whitePieces.includes(document.getElementById(killButton).innerHTML)) {
+    } else if (color === black && document.getElementById(killButton).innerHTML.match(whitePieces)) {
         possibleMove(killButton, move);
     }
 }
@@ -330,12 +325,12 @@ function rook(id, color, move) {
 
 function rookSideMove(id, color, move) {
     if (document.getElementById(id).innerHTML !== "") {
-        if ((color === white && whitePieces.includes(document.getElementById(id).innerHTML)) ||
-            (color === black && blackPieces.includes(document.getElementById(id).innerHTML))) {
+        if ((color === white && document.getElementById(id).innerHTML.match(whitePieces)) ||
+            (color === black && document.getElementById(id).innerHTML.match(blackPieces))) {
             return -1;
         }
-        if ((color === white && blackPieces.includes(document.getElementById(id).innerHTML)) ||
-            (color === black && whitePieces.includes(document.getElementById(id).innerHTML))) {
+        if ((color === white && document.getElementById(id).innerHTML.match(blackPieces)) ||
+            (color === black && document.getElementById(id).innerHTML.match(whitePieces))) {
             possibleMove(id, move);
             return -1;
         }
@@ -361,10 +356,10 @@ function rookFor(letter, number, letterIncrement, numberIncrement, color, move) 
 }
 
 function rookMoved() {
-    rook1White = movedPiece("a1", whiteRook);
-    rook2White = movedPiece("h1", whiteRook);
-    rook1Black = movedPiece("a8", blackRook);
-    rook2Black = movedPiece("h8", blackRook);
+    rook1White = movedPiece("a1", rook1White);
+    rook2White = movedPiece("h1", rook2White);
+    rook1Black = movedPiece("a8", rook1Black);
+    rook2Black = movedPiece("h8", rook2Black);
 }
 
 function bishop(id, color, move) {
@@ -417,11 +412,11 @@ function bishopFor(letter, number, maxLetter, maxNumber, letterIncrement, number
 
 function bishopMove(id, color, move) {
     if (document.getElementById(id).innerHTML !== "") {
-        if ((color === white && whitePieces.includes(document.getElementById(id).innerHTML)) ||
-            (color === black && blackPieces.includes(document.getElementById(id).innerHTML))) {
+        if ((color === white && document.getElementById(id).innerHTML.match(whitePieces)) ||
+            (color === black && document.getElementById(id).innerHTML.match(blackPieces))) {
             return -1;
-        } else if ((color === white && blackPieces.includes(document.getElementById(id).innerHTML)) ||
-            (color === black && whitePieces.includes(document.getElementById(id).innerHTML))) {
+        } else if ((color === white && document.getElementById(id).innerHTML.match(blackPieces)) ||
+            (color === black && document.getElementById(id).innerHTML.match(whitePieces))) {
             possibleMove(id, move);
             return -1;
         }
@@ -461,8 +456,8 @@ function knightPieceCheck(id, color, move) {
     }
     if (document.getElementById(id).innerHTML === "") {
         possibleMove(id, move);
-    } else if ((color === white && blackPieces.includes(document.getElementById(id).innerHTML)) ||
-        (color === black && whitePieces.includes(document.getElementById(id).innerHTML))) {
+    } else if ((color === white && document.getElementById(id).innerHTML.match(blackPieces)) ||
+        (color === black && document.getElementById(id).innerHTML.match(whitePieces))) {
         possibleMove(id, move);
     }
     if (move === true) {
@@ -493,6 +488,7 @@ function king(id, color, move) {
 
     castle("right", color);
     castle("left", color);
+    // checkKing();
 }
 
 function kingPieceCheck(id, color, move) {
@@ -501,8 +497,8 @@ function kingPieceCheck(id, color, move) {
     }
     if (document.getElementById(id).innerHTML === "") {
         possibleMove(id, move);
-    } else if ((color === white && blackPieces.includes(document.getElementById(id).innerHTML)) ||
-        (color === black && whitePieces.includes(document.getElementById(id).innerHTML))) {
+    } else if ((color === white && document.getElementById(id).innerHTML.match(blackPieces)) ||
+        (color === black && document.getElementById(id).innerHTML.match(whitePieces))) {
         possibleMove(id, move);
     }
 
@@ -513,8 +509,8 @@ function kingPieceCheck(id, color, move) {
 }
 
 function kingMoved() {
-    kingWhite = movedPiece("e1", whiteKing);
-    kingBlack = movedPiece("e8", blackKing);
+    kingWhite = movedPiece("e1", kingWhite);
+    kingBlack = movedPiece("e8", kingBlack);
 }
 
 function castle(side, color) {
@@ -522,20 +518,20 @@ function castle(side, color) {
         case "right":
             switch (color) {
                 case white:
-                    castleRightMove("f1", "g1", rook2White, kingWhite, true, "e1", whiteCheck);
+                    castleRightMove("f1", "g1", rook1White, kingWhite, true, "e1", whiteCheck);
                     break;
                 case black:
-                    castleRightMove("f8", "g8", rook2Black, kingBlack, true, "e8", blackCheck);
+                    castleRightMove("f8", "g8", rook1Black, kingWhite, true, "e8", blackCheck);
                     break;
             }
             break;
         case "left":
             switch (color) {
                 case white:
-                    castleLeftMove("d1", "c1", "b1", rook1White, kingWhite, true, "e1", whiteCheck);
+                    castleLeftMove("d1", "c1", "b1", rook2White, kingWhite, true, "e1", whiteCheck);
                     break;
                 case black:
-                    castleLeftMove("d8", "c8", "b8", rook1Black, kingBlack, true, "e8", blackCheck);
+                    castleLeftMove("d8", "c8", "b8", rook2White, kingWhite, true, "e8", blackCheck);
                     break;
             }
             break;
@@ -545,46 +541,46 @@ function castle(side, color) {
 
 function castleRightMove(block1, block2, rookMoved, kingMoved, move, king, check) {
     if (document.getElementById(block1).innerHTML === "" && document.getElementById(block2).innerHTML === "" &&
-        !rookMoved && !kingMoved && button1.id === king && !check) {
+        rookMoved === false && kingMoved === false && button1.id === king && !check) {
         possibleMove(block2, move);
     }
 }
 
-function castleLeftMove(block1, block2, block3, rookMoved, kingMoved, move, king, check) {
+function castleLeftMove(block1, block2, block3, rookMoved, kingMoved, move, king) {
     if (document.getElementById(block1).innerHTML === "" &&
         document.getElementById(block2).innerHTML === "" && document.getElementById(block3).innerHTML === "" &&
-        !rookMoved && !kingMoved && button1.id === king && !check) {
-        possibleMove(block2, move);
+        rookMoved === false && kingMoved === false && button1.id === (king)) {
+        possibleMove(block3, move);
     }
 }
 
-function castleChosen(stButton, ndButton, side, color) {
+function castleChosen(side, color) {
     switch (side) {
         case "right":
             switch (color) {
                 case white:
-                    castleChosenMove(stButton, ndButton, "e1", "g1", "f1", "h1", whiteKing, whiteRook);
+                    castleChosenMove("e1", "g1", "f1", "h1", whiteKing, whiteRook);
                     break;
                 case black:
-                    castleChosenMove(stButton, ndButton, "e8", "g8", "f8", "h8", blackKing, blackRook);
+                    castleChosenMove("e8", "g8", "f8", "h8", blackKing, blackRook);
                     break;
             }
             break;
         case "left":
             switch (color) {
                 case white:
-                    castleChosenMove(stButton, ndButton, "e1", "c1", "d1", "a1", whiteKing, whiteRook);
+                    castleChosenMove("e1", "b1", "c1", "a1", whiteKing, whiteRook);
                     break;
                 case black:
-                    castleChosenMove(stButton, ndButton, "e8", "c8", "d8", "a8", blackKing, blackRook);
+                    castleChosenMove("e8", "b8", "a8", "h8", blackKing, blackRook);
                     break;
             }
             break;
     }
 }
 
-function castleChosenMove(stButton, ndButton, button1ID, button2ID, rookMove, corner, king, rook) {
-    if ((stButton.id === button1ID && ndButton.id === button2ID)) {
+function castleChosenMove(button1ID, button2ID, rookMove, corner, king, rook) {
+    if (button1.id === button1ID && button2.id === button2ID) {
         document.getElementById(button2ID).innerHTML = king;
         document.getElementById(rookMove).innerHTML = rook;
         document.getElementById(corner).innerHTML = "";
@@ -633,33 +629,35 @@ function kingPosition(color) {
 function illegalMoveCheck(color, button) {
     var prevWhiteCheck = whiteCheck;
     var prevBlackCheck = blackCheck;
-    var possibleMoves = document.querySelectorAll(".possibleMove");
+    // var possibleMoves = document.getElementsByClassName("possibleMove");
 
-    possibleMoves.forEach(move => {
-        var html = move.innerHTML;
-        move.innerHTML = button.innerHTML;
-        button.innerHTML = "";
-        whiteCheck = false;
-        blackCheck = false;
-        letters.forEach(letter1 => numbers.forEach(number1 => {
-            document.getElementById(letter1 + number1).classList.remove("check");
-        }))
-        check();
-        if ((color === white && whiteCheck) || (color === black && blackCheck)) {
-            move.classList.remove("possibleMove");
+    letters.forEach(letter => numbers.forEach(number => {
+        if (document.getElementById(letter + number).classList.contains("possibleMove")) {
+            var html = document.getElementById(letter + number).innerHTML;
+            document.getElementById(letter + number).innerHTML = button.innerHTML;
+            button.innerHTML = "";
+            whiteCheck = false;
+            blackCheck = false;
+            letters.forEach(letter1 => numbers.forEach(number1 => {
+                document.getElementById(letter1 + number1).classList.remove("check");
+            }))
+            check();
+            if ((color === white && whiteCheck) || (color === black && blackCheck)) {
+                document.getElementById(letter + number).classList.remove("possibleMove");
+            }
+            button.innerHTML = document.getElementById(letter + number).innerHTML;
+            document.getElementById(letter + number).innerHTML = html;
+            whiteCheck = prevWhiteCheck;
+            blackCheck = prevBlackCheck;
+            if (!whiteCheck && !blackCheck) {
+                document.getElementById("Check").innerHTML = "";
+            } else if (whiteCheck) {
+                document.getElementById("Check").innerHTML = "Check to White";
+            } else if (blackCheck) {
+                document.getElementById("Check").innerHTML = "Check to Black";
+            }
         }
-        button.innerHTML = move.innerHTML;
-        move.innerHTML = html;
-        whiteCheck = prevWhiteCheck;
-        blackCheck = prevBlackCheck;
-        if (!whiteCheck && !blackCheck) {
-            document.getElementById("Check").innerHTML = "";
-        } else if (whiteCheck) {
-            document.getElementById("Check").innerHTML = "Check to White";
-        } else if (blackCheck) {
-            document.getElementById("Check").innerHTML = "Check to Black";
-        }
-    });
+    }))
 }
 
 function checkMate() {
@@ -696,21 +694,25 @@ function checkMate() {
             document.getElementById(letter1 + number1).classList.remove("check");
         }))
         check();
-        if (prevWhiteCheck && whiteCheck) {
-            mate.innerHTML = "Checkmate! Black Wins!";
-            socket.emit('checkmate', roomId, mate.innerHTML);
-            seconds = -2;
-            clearInterval(countdown);
-            getBoard();
-            return;
+        if (prevWhiteCheck) {
+            if (whiteCheck) {
+                mate.innerHTML = "Checkmate! Black Wins!";
+                socket.emit('checkmate', roomId, mate.innerHTML);
+                seconds = -2;
+                clearInterval(countdown);
+                getBoard();
+                return;
+            }
         }
-        if (prevBlackCheck && blackCheck) {
-            mate.innerHTML = "Checkmate! White Wins!";
-            socket.emit('checkmate', roomId, mate.innerHTML);
-            seconds = -2;
-            clearInterval(countdown);
-            getBoard();
-            return;
+        if (prevBlackCheck) {
+            if (blackCheck) {
+                mate.innerHTML = "Checkmate! White Wins!";
+                socket.emit('checkmate', roomId, mate.innerHTML);
+                seconds = -2;
+                clearInterval(countdown);
+                getBoard();
+                return;
+            }
         }
         getBoard();
     }
@@ -759,9 +761,9 @@ function pieceCheckMate(id, bool) {
     }
 }
 
-function movedPiece(id, piece) {
-    if (document.getElementById(id).innerHTML !== piece) {
-        return true;
+function movedPiece(id, pieceMoved) {
+    if (button1.id === id && button2.id !== button1.id) {
+        return pieceMoved = true;
     }
 }
 
@@ -770,10 +772,8 @@ function possibleMove(id, move) {
         document.getElementById(id).classList.add("possibleMove");
     } else if (move === false) {
         document.getElementById(id).classList.add('check');
-    } else if (move === -1) {
-        document.getElementById(id).classList.add('checkMate');
     } else {
-        document.getElementById(id).classList.add('ai');
+        document.getElementById(id).classList.add('checkMate');
     }
 }
 
@@ -918,8 +918,6 @@ function switchHTML() {
 }
 
 function turn1(change) {
-    const white = "white";
-    const black = "black";
     if (change) {
         seconds = moveInterval;
     }
@@ -927,9 +925,9 @@ function turn1(change) {
 
     letters.forEach(element => numbers.forEach(element1 => {
         if ((turn.innerHTML === "White's Turn" && boardColor === white &&
-                whitePieces.includes(document.getElementById(element + element1).innerHTML)) ||
+                document.getElementById(element + element1).innerHTML.match(whitePieces)) ||
             (turn.innerHTML === "Black's Turn" && boardColor === black &&
-                blackPieces.includes(document.getElementById(element + element1).innerHTML))) {
+                document.getElementById(element + element1).innerHTML.match(blackPieces))) {
             document.getElementById(element + element1).disabled = false;
         } else {
             document.getElementById(element + element1).disabled = true;
@@ -938,10 +936,10 @@ function turn1(change) {
 }
 
 function pieceColor(id) {
-    if (whitePieces.includes(document.getElementById(id).innerHTML)) {
+    if (document.getElementById(id).innerHTML.match(whitePieces)) {
         return white;
     }
-    if (blackPieces.includes(document.getElementById(id).innerHTML)) {
+    if (document.getElementById(id).innerHTML.match(blackPieces)) {
         return black;
     }
     return "empty";
@@ -962,54 +960,11 @@ function removeCheckMoves(id) {
     }
 }
 
-function movesHistory(to, bool) {
+function movesHistory(from, to) {
     var historyMoves = document.getElementById('HistoryMoves');
-    var addNumber = !addLine ? addNumber = turnRotation.toString() + ". " : addNumber = "";
-    var kill = button2HTML === "" ? kill = "" : kill = "x"
-    var br = addLine ? br = "<br>" : br = " ";
-    var line = addNumber + pieceNota(to.id) + kill + to.id + br;
-    historyMoves.innerHTML += line;
-    if (addLine) {
-        addLine = false;
-        turnRotation++;
-    } else {
-        addLine = true;
-    }
+    var moves = to.innerHTML + ", " + from.id + ", " + to.id;
 
-    if (bool) {
-        socket.emit('movesHistory', roomId, historyMoves.innerHTML, turnRotation, addLine);
-    }
-}
-
-function pieceNota(id) {
-    switch (document.getElementById(id).innerHTML) {
-        case whitePawn:
-            return "";
-        case blackPawn:
-            return "";
-        case whiteRook:
-            return "R";
-        case blackRook:
-            return "R";
-        case whiteKnight:
-            return "N";
-        case blackKnight:
-            return "N";
-        case whiteBishop:
-            return "B";
-        case blackBishop:
-            return "B";
-        case whiteQueen:
-            return "Q";
-        case blackQueen:
-            return "Q";
-        case whiteKing:
-            return "K";
-        case blackKing:
-            return "K";
-        default:
-            return false;
-    }
+    historyMoves.innerHTML += moves + '<br>';
 }
 
 function pieceKill() {
@@ -1017,10 +972,10 @@ function pieceKill() {
     var blackKill = document.getElementById("BlackKill");
 
     if (button2.id !== button1.id) {
-        if (button2.innerHTML !== "" && whitePieces.includes(button1.innerHTML)) {
+        if (button2.innerHTML !== "" && button1.innerHTML.match(whitePieces)) {
             blackKill.innerHTML += button2.innerHTML + ", ";
         }
-        if (button2.innerHTML !== "" && blackPieces.includes(button1.innerHTML)) {
+        if (button2.innerHTML !== "" && button1.innerHTML.match(blackPieces)) {
             whiteKill.innerHTML += button2.innerHTML + ", ";
         }
     }
@@ -1043,14 +998,13 @@ function waiting() {
     resetBoardColor();
     seconds = -2;
     boardColor = white;
-    document.getElementById("Color").innerHTML = "Color: " + boardColor;
 }
 
 function exportMove() {
     var move;
-    if (blackPieces.includes(button2.innerHTML)) {
+    if (button2.innerHTML.match(blackPieces)) {
         move = "b" + button1.id + button2.id;
-    } else if (whitePieces.includes(button2.innerHTML)) {
+    } else if (button2.innerHTML.match(whitePieces)) {
         move = "w" + button1.id + button2.id;
     }
     console.log(move);
@@ -1072,13 +1026,10 @@ function importMove(move) {
         blackKill.innerHTML += toButton.innerHTML + ", ";
     }
     toButton.innerHTML = fromButton.innerHTML;
+    movesHistory(fromButton, toButton);
     check();
     fromButton.innerHTML = "";
     switchHTML();
-    castleChosen(fromButton, toButton, "right", white);
-    castleChosen(fromButton, toButton, "left", white);
-    castleChosen(fromButton, toButton, "right", black);
-    castleChosen(fromButton, toButton, "left", black);
     fromButton.classList.add("lastMove");
     toButton.classList.add("lastMove");
     fromButton = null;
